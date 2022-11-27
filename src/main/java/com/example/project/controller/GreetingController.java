@@ -1,6 +1,6 @@
 package com.example.project.controller;
 
-import com.example.project.model.Greeting;
+import com.example.project.dto.GreetingDto;
 import com.example.project.service.GreetingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,13 +21,13 @@ public class GreetingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Greeting create(@RequestBody Greeting greeting) {
-        return greetingService.save(greeting);
+    public GreetingDto create(@RequestBody GreetingDto greetingDto) {
+        return greetingService.save(greetingDto);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Greeting getById(@PathVariable("id") Long id) {
+    public GreetingDto getById(@PathVariable("id") Long id) {
         return greetingService.getById(id);
     }
 }
