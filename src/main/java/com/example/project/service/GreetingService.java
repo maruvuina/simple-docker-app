@@ -1,5 +1,8 @@
 package com.example.project.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.example.project.dto.GreetingDto;
 import com.example.project.exception.GreetingNotFoundException;
 import com.example.project.mapper.GreetingMapper;
@@ -29,6 +32,13 @@ public class GreetingService {
                 .map(greetingMapper::toDto)
                 .orElseThrow(() ->
                         new GreetingNotFoundException("Not found greeting with id = " + id));
+    }
+
+    public List<GreetingDto> getAll() {
+        return greetingRepository.findAll()
+                .stream()
+                .map(greetingMapper::toDto)
+                .collect(Collectors.toList());
     }
 
 }

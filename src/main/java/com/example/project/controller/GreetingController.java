@@ -1,5 +1,7 @@
 package com.example.project.controller;
 
+import java.util.List;
+
 import com.example.project.dto.GreetingDto;
 import com.example.project.service.GreetingService;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +31,12 @@ public class GreetingController {
     @ResponseStatus(HttpStatus.OK)
     public GreetingDto getById(@PathVariable("id") Long id) {
         return greetingService.getById(id);
+    }
+
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<GreetingDto> getAll() {
+        return greetingService.getAll();
     }
 }
