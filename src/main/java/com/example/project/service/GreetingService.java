@@ -9,9 +9,11 @@ import com.example.project.mapper.GreetingMapper;
 import com.example.project.model.Greeting;
 import com.example.project.repository.GreetingRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GreetingService {
@@ -28,10 +30,7 @@ public class GreetingService {
     }
 
     public GreetingDto getById(Long id) {
-        return greetingRepository.findById(id)
-                .map(greetingMapper::toDto)
-                .orElseThrow(() ->
-                        new GreetingNotFoundException("Not found greeting with id = " + id));
+        return greetingMapper.toDto(getByGreetingId(id));
     }
 
     public List<GreetingDto> getAll() {
@@ -41,4 +40,23 @@ public class GreetingService {
                 .collect(Collectors.toList());
     }
 
+    public GreetingDto update(Long id, GreetingDto greetingDto) {
+        Greeting greeting = getByGreetingId(id);
+        greeting.setName(greetingDto.getName());
+        return greetingMapper.toDto(greetingRepository.save(greeting));
+    }
+
+    public void delete(Long id) {
+        greetingRepository.deleteById(id);
+        log.info("Greeting with id = {} deleted", id);
+    }
+
+    private Greeting getByGreetingId(Long id) {
+        return greetingRepository.findById(id)
+                .orElseThrow(() ->{
+                    log.error("Greeting with id = {} not found", id);
+                    throw new GreetingNotFoundException("Not found greeting with id = " + id);
+                });
+
+    }
 }
