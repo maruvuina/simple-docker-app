@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.project.dto.GreetingDto;
-import com.example.project.exception.GreetingFoundException;
+import com.example.project.exception.GreetingAlreadyExistsException;
 import com.example.project.exception.GreetingNotFoundException;
 import com.example.project.mapper.GreetingMapper;
 import com.example.project.model.Greeting;
@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Provides functionality to manipulate {@link Greeting}s.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,7 +30,7 @@ public class GreetingService {
     public GreetingDto save(GreetingDto greetingDto) {
         if (greetingRepository.existsByName(greetingDto.getName())) {
             log.error("Greeting with name {} already exists", greetingDto.getName());
-            throw new GreetingFoundException("Greeting already exists with name = " + greetingDto.getName());
+            throw new GreetingAlreadyExistsException("Greeting already exists with name = " + greetingDto.getName());
         }
         Greeting greeting = greetingMapper.fromDto(greetingDto);
         Greeting createdGreeting = greetingRepository.save(greeting);

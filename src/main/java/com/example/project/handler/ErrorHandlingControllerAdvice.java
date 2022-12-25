@@ -1,6 +1,6 @@
 package com.example.project.handler;
 
-import com.example.project.exception.GreetingFoundException;
+import com.example.project.exception.GreetingAlreadyExistsException;
 import com.example.project.exception.GreetingNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class ErrorHandlingControllerAdvice {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponse> handleGreetingFoundException(GreetingFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleGreetingFoundException(GreetingAlreadyExistsException ex) {
         return new ResponseEntity<>(
                 ErrorResponse.builder()
                         .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
