@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.project.dto.GreetingDto;
+import com.example.project.exception.GreetingFoundException;
 import com.example.project.exception.GreetingNotFoundException;
 import com.example.project.mapper.GreetingMapper;
 import com.example.project.model.Greeting;
@@ -24,6 +25,10 @@ public class GreetingService {
 
     @Transactional
     public GreetingDto save(GreetingDto greetingDto) {
+        if (greetingRepository.existsByName(greetingDto.getName())) {
+            log.error("Greeting with name {} already exists", greetingDto.getName());
+            throw new GreetingFoundException("Greeting already exists with name = " + greetingDto.getName());
+        }
         Greeting greeting = greetingMapper.fromDto(greetingDto);
         Greeting createdGreeting = greetingRepository.save(greeting);
         return greetingMapper.toDto(createdGreeting);
@@ -53,7 +58,7 @@ public class GreetingService {
 
     private Greeting getByGreetingId(Long id) {
         return greetingRepository.findById(id)
-                .orElseThrow(() ->{
+                .orElseThrow(() -> {
                     log.error("Greeting with id = {} not found", id);
                     throw new GreetingNotFoundException("Not found greeting with id = " + id);
                 });

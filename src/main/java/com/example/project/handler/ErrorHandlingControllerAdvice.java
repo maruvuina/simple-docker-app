@@ -1,5 +1,6 @@
 package com.example.project.handler;
 
+import com.example.project.exception.GreetingFoundException;
 import com.example.project.exception.GreetingNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,5 +20,27 @@ public class ErrorHandlingControllerAdvice {
                         .message(ex.getMessage())
                         .build(),
                 HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleGreetingFoundException(GreetingFoundException ex) {
+        return new ResponseEntity<>(
+                ErrorResponse.builder()
+                        .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                        .message(ex.getMessage())
+                        .build(),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        return new ResponseEntity<>(
+                ErrorResponse.builder()
+                        .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                        .message(ex.getMessage())
+                        .build(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
